@@ -142,6 +142,8 @@ macro(find_llvm use_llvm)
       string(REPLACE "$" ${__llvm_prefix} __lib_with_prefix "${__flag}")
       list(APPEND LLVM_LIBS "${__lib_with_prefix}")
     endforeach()
+    list(APPEND LLVM_LIBS "/workspace/main/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04/lib/libMLIRPresburger.a")
+    list(APPEND LLVM_LIBS "/workspace/main/clang+llvm-15.0.6-x86_64-linux-gnu-ubuntu-18.04/lib/libMLIRSupport.a")
     separate_arguments(__llvm_system_libs)
     foreach(__flag IN ITEMS ${__llvm_system_libs})
       # If the library file ends in .lib try to

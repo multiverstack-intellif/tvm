@@ -81,6 +81,23 @@ class IntervalSet(IntSet):
         self.__init_handle_by_constructor__(_ffi_api.IntervalSet, min_value, max_value)
 
 
+@tvm._ffi.register_object("arith.IntegerSet")
+class IntegerSet(IntSet):
+    """Represent of Presburger Set
+
+    Parameters
+    ----------
+    constraint : PrimExpr
+        The constraint expression.
+
+    vars : List[PrimExpr]
+        The domain vars of Presburger Set.
+    """
+
+    def __init__(self, constraint, vars):
+        self.__init_handle_by_constructor__(_ffi_api.IntegerSet, constraint, vars)
+
+
 def estimate_region_lower_bound(region, var_dom, predicate):
     """Analyze the region with affine map, given the domain of variables and their predicate
     Some subregion may be discarded during the lower-bound analysis.
@@ -187,3 +204,33 @@ def union_lower_bound(sets):
         An N-dimensional integer set, the lower bound of the union
     """
     return _ffi_api.UnionLowerBound(sets)
+
+def union(sets):
+    """Create the union set of input sets
+
+    Parameters
+    ----------
+    sets : List[IntegerSet]
+        The sets to be unioned
+
+    Returns
+    ----------
+    union : IntegerSet
+        The generated union set of input sets
+    """
+    return _ffi_api.Union(sets)
+
+def intersect(sets):
+    """Create the intersect set of input sets
+
+    Parameters
+    ----------
+    sets : List[IntegerSet]
+        The input set of the intersect operation
+
+    Returns
+    ----------
+    union : IntegerSet
+        The generated intersect set of input sets
+    """
+    return _ffi_api.Intersect(sets)
