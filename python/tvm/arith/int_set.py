@@ -234,3 +234,6 @@ def intersect(sets):
         The generated intersect set of input sets
     """
     return _ffi_api.Intersect(sets)
+
+def eval_range(e, set):
+    return _ffi_api.EvalRange(e, set)

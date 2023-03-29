@@ -26,6 +26,7 @@
 
 #include <mlir/Analysis/Presburger/PresburgerRelation.h>
 #include <mlir/Analysis/Presburger/IntegerRelation.h>
+#include <mlir/Analysis/Presburger/Simplex.h>
 
 #include <tvm/arith/analyzer.h>
 #include <tvm/tir/op.h>
@@ -72,7 +73,7 @@ class IntegerSetNode : public IntSetNode {
 
   void UpdateConstraint(const PrimExpr& constraint, const Array<Var>& vars);
 
-  PrimExpr GenerateConstraint();
+  PrimExpr GenerateConstraint() const;
 
   void SetVars(const Array<Var> &new_vars) { vars = new_vars; }
 
@@ -127,6 +128,8 @@ IntegerSet Union(const Array<IntegerSet>& sets);
  * \return the set after intersected
  */
 IntegerSet Intersect(const Array<IntegerSet>& sets);
+
+IntSet EvalSet(const PrimExpr& e, const IntegerSet& set);
 
 }  // namespace arith
 }  // namespace tvm
