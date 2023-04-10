@@ -25,6 +25,7 @@
 #include <tvm/runtime/registry.h>
 #include <tvm/tir/expr.h>
 #include <tvm/tir/expr_functor.h>
+#include <tvm/tir/stmt_functor.h>
 #include <tvm/arith/pattern.h>
 
 #include <algorithm>
@@ -99,6 +100,26 @@ void Update(const PrimExpr& constraint, const Array<Var>& vars, PresburgerSet& s
 }
 
 IntegerSet::IntegerSet(const PrimExpr& constraint, const Array<Var>& vars) {
+  auto constraints_union = ExtractComponents(constraint);
+  auto space = PresburgerSpace::getSetSpace(vars.size(), 0, 0);
+  PresburgerSet presburger_set = PresburgerSet::getEmpty(space);
+  auto node = make_object<IntegerSetNode>(presburger_set, vars);
+  Update(constraint, vars, node->set);
+  node->SetVars(vars);
+  data_ = std::move(node);
+}
+
+IntegerSet::IntegerSet(const PrimExpr& constraint) {
+  Array<Var> vars;
+  PostOrderVisit(constraint, [&vars](const ObjectRef& obj) {
+    if (const VarNode* new_var = obj.as<VarNode>()) {
+        auto var = GetRef<Var>(new_var);
+        if (!std::any_of(vars.begin(), vars.end(),
+                         [&var](const Var& v) { return v.same_as(var); })) {
+          vars.push_back(var);
+        }
+    }
+  });
   auto constraints_union = ExtractComponents(constraint);
   auto space = PresburgerSpace::getSetSpace(vars.size(), 0, 0);
   PresburgerSet presburger_set = PresburgerSet::getEmpty(space);

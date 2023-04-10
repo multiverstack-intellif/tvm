@@ -104,6 +104,13 @@ class IntegerSet : public IntSet {
   TVM_DLL IntegerSet(const PrimExpr& constraint, const Array<Var>& vars);
 
   /*!
+   * \brief Make a new instance of integer set, collect all vars as space vars.
+   * \param constraint The constraint to construct the set.
+   * \return The created set.
+   */
+  TVM_DLL IntegerSet(const PrimExpr& constraint);
+
+  /*!
    * \brief Make a new instance of integer set.
    * \param set The PresburgurSet to construct the IntegerSet.
    * \param vars The variances that integer set describes about.
